@@ -22,6 +22,8 @@ class Settings(BaseSettings):
     VECTOR_SEARCH_LIMIT: int = 20
     HYBRID_ALPHA: float = 0.5
     APP_ENV: str = "development"
+    ALLOWED_ORIGINS: str = "*"  # comma-separated in production, e.g. "https://myapp.railway.app"
+    PORT: int = 8000
 
 
 settings = Settings()
