@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+psycopg2://finresearch:finresearch@localhost:5432/finresearch"
     OPENAI_API_KEY: str = ""
     ANTHROPIC_API_KEY: str = ""
+    GOOGLE_API_KEY: str = ""
     EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
     CHUNK_SIZE: int = 512
     CHUNK_OVERLAP: int = 64

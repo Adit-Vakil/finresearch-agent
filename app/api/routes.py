@@ -121,9 +121,8 @@ def ask(
         for s in result["sources"]
     ]
 
-    model_name = "anthropic/claude-sonnet-4-6" if settings.ANTHROPIC_API_KEY else (
-        "openai/gpt-4o-mini" if settings.OPENAI_API_KEY else "stub"
-    )
+    from app.rag.generator import active_model_name
+    model_name = active_model_name()
 
     return AskResponse(
         answer=result["answer"],
