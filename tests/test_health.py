@@ -45,15 +45,25 @@ def test_health_has_version():
     assert "version" in data
 
 
-def test_search_stub():
-    resp = client.post("/search", json={"query": "supply chain risks"})
+def test_search_returns_empty_results_when_no_data():
+    with patch("app.retrieval.hybrid_search.retrieve", return_value=([], "hybrid")):
+        resp = client.post("/search", json={"query": "supply chain risks"})
     assert resp.status_code == 200
     data = resp.json()
     assert data["results"] == []
 
 
-def test_ask_stub():
-    resp = client.post("/ask", json={"question": "What are the main risks?"})
+def test_ask_returns_answer_structure():
+    with patch(
+        "app.rag.workflow.answer_question",
+        return_value={
+            "answer": "No data available.",
+            "sources": [],
+            "retrieval_mode": "hybrid",
+            "citation_validation": {"has_citations": False},
+        },
+    ):
+        resp = client.post("/ask", json={"question": "What are the main risks?"})
     assert resp.status_code == 200
     data = resp.json()
     assert "answer" in data

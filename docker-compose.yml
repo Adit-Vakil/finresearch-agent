@@ -25,6 +25,24 @@ services:
       db:
         condition: service_healthy
     restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg2://finresearch:finresearch@db:5432/finresearch
+
+  frontend:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./frontend:/app/frontend
+      - ./requirements-frontend.txt:/app/requirements-frontend.txt
+    command: >
+      sh -c "pip install -q streamlit requests && streamlit run frontend/streamlit_app.py
+             --server.port=8501 --server.address=0.0.0.0"
+    ports:
+      - "8501:8501"
+    environment:
+      FINRESEARCH_API_URL: http://api:8000
+    depends_on:
+      - api
 
 volumes:
   postgres_data:

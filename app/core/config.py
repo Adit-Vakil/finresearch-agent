@@ -9,7 +9,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    DATABASE_URL: str = "postgresql://finresearch:finresearch@localhost:5432/finresearch"
+    DATABASE_URL: str = "postgresql+psycopg2://finresearch:finresearch@localhost:5432/finresearch"
     OPENAI_API_KEY: str = ""
     ANTHROPIC_API_KEY: str = ""
     EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"

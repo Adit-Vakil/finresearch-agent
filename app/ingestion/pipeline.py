@@ -14,6 +14,7 @@ from app.ingestion.chunker import chunk_filing
 from app.ingestion.cleaner import clean_text
 from app.ingestion.parser import parse_filing
 from app.ingestion.sec_client import SECClient
+from app.retrieval.embeddings import embed_texts
 
 logger = logging.getLogger(__name__)
 
@@ -123,7 +124,11 @@ def _process_one_filing(session, company: Company, meta: dict, client: SECClient
         chunk_overlap=settings.CHUNK_OVERLAP,
     )
 
-    for chunk in chunks:
+    # Batch-embed all chunks before writing to DB
+    chunk_texts = [c.text for c in chunks]
+    embeddings = embed_texts(chunk_texts)
+
+    for chunk, embedding in zip(chunks, embeddings):
         session.add(
             DocumentChunk(
                 filing_id=filing.id,
@@ -131,6 +136,7 @@ def _process_one_filing(session, company: Company, meta: dict, client: SECClient
                 section=chunk.section,
                 text=chunk.text,
                 token_count=chunk.token_count,
+                embedding=embedding,
                 metadata_=chunk.metadata,
             )
         )
